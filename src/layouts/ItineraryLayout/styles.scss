@@ -1,0 +1,18 @@
+.itinerary-layout {
+  padding: 0;
+  box-sizing: border-box;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+}
+
+.itinerary-content {
+  max-width: 1280px;
+}
+
+.days-grid {
+  box-sizing: border-box;
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+}

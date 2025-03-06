@@ -1,0 +1,38 @@
+.day-layout {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  width: 100vw;
+}
+
+.day-layout-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.photo-text-container {
+  background: black;
+  padding: 10px;
+  gap: 10px;
+  display: flex;
+  max-width: 900px;
+  flex-direction: column;
+}
+
+.photo-section {
+  flex: 2;
+  overflow: hidden;
+}
+
+.text-section {
+  flex: 1;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+}
