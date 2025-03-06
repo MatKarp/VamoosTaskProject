@@ -1,10 +1,10 @@
 # Vamoos Frontend Assessment Task
 
 ## Author: Mateusz Karpisiewicz
+
 Before running the application, ensure you have the following installed:
 - **Node.js** (Latest LTS version recommended) but can be 18+ or 22+ (vite recomended)
 - **npm** or **yarn** (Package manager)  ```
-
 
 ## Installation Steps
 1. Clone the repository:

@@ -14,22 +14,26 @@ const DayView = () => {
   const day_id: number = Number(params.day_id);
   const itinerary_id: string = params.itinerary_id;
   const { data, isFetching } = usePosts(itinerary_id);
-  const result = data?.brief.find((dayObj) => dayObj.day === day_id);
 
-  const previousDay = data?.brief.find((dayObj) => dayObj.day === day_id - 1);
-  const nextDay = data?.brief.find((dayObj) => dayObj.day === day_id + 1);
+  const days = data?.brief || [];
+
+  const current_day_index = days.findIndex((dayObj) => dayObj.day === day_id);
+  const current_day = days[current_day_index];
+
+  const previousDay = days[current_day_index - 1]
+  const nextDay= days[current_day_index + 1]
 
   const textNodeContent = useMemo(
     () =>
-      result && (
+      current_day && (
         <>
           <h1>
-            Day {result.day} {result.headline}
+            Day {current_day.day} {current_day.headline}
           </h1>
-          <div>{result.shortInformation}</div>
+          <div>{current_day.shortInformation}</div>
         </>
       ),
-    [result],
+    [current_day],
   );
 
   const handleOnBackToItinerary = useCallback(() => {
@@ -43,36 +47,31 @@ const DayView = () => {
     return <div>Loading</div>;
   }
 
-
   return (
     <DayLayout
       navBarNode={
-          <div className={"nav-bar-root"}>
-            <button onClick={handleOnBackToItinerary}>Back To Itinerary</button>
-            <div
-              className={classNames([
-                "flex-row",
-                "align-items-center",
-                "links",
-              ])}
-            >
-              {result?.detailsAttachment?.fileUrl && (
-                <a
-                  aria-selected={"false"}
-                  target="_blank"
-                  href={result?.detailsAttachment?.fileUrl}
-                >
-                  Details Atachment
-                </a>
-              )}
-              {result?.location?.pdfUrl && (
-                <a target="_blank" href={result?.location?.pdfUrl}>
-                  Location
-                </a>
-              )}
-            </div>
-            <button onClick={handleOnBackToLogin}>Logout</button>
+        <div className={"nav-bar-root"}>
+          <button onClick={handleOnBackToItinerary}>Back To Itinerary</button>
+          <div
+            className={classNames(["flex-row", "align-items-center", "links"])}
+          >
+            {current_day?.detailsAttachment?.fileUrl && (
+              <a
+                aria-selected={"false"}
+                target="_blank"
+                href={current_day?.detailsAttachment?.fileUrl}
+              >
+                Details Atachment
+              </a>
+            )}
+            {current_day?.location?.pdfUrl && (
+              <a target="_blank" href={current_day?.location?.pdfUrl}>
+                Location
+              </a>
+            )}
           </div>
+          <button onClick={handleOnBackToLogin}>Logout</button>
+        </div>
       }
       previousButtonNode={
         previousDay && (
@@ -96,7 +95,7 @@ const DayView = () => {
           </ErrorBoundary>
         )
       }
-      photoNode={<img src={result?.dailyPhoto} className={"image"} />}
+      photoNode={<img src={current_day?.dailyPhoto} className={"image"} />}
       textNode={textNodeContent}
     />
   );
