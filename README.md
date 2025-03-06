@@ -9,8 +9,8 @@ Before running the application, ensure you have the following installed:
 ## Installation Steps
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/assessment-app.git
-   cd assessment-app
+   git clone git@github.com:MatKarp/VamoosTaskProject.git
+   cd VamoosTaskProject
 2. Install packages
     ```sh
     yarn 
