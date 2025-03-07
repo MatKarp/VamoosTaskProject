@@ -23,6 +23,7 @@ const ItineraryView = (): React.JSX.Element => {
   const itinerary_id = user_id + "-" + passcode;
 
   const { data, isFetching } = usePosts(itinerary_id);
+
   const days = useMemo(() => data?.brief || [], [data]);
 
   const handleOnClick = useCallback(
