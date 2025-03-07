@@ -6,15 +6,20 @@ import DayLayout from "../../layouts/DayLayout";
 import "./style.scss";
 import { ErrorBoundary } from "react-error-boundary";
 import NavigationButton from "../../components/NavigationButton";
+import { useAuth } from "../../contexts/AuthProvider.tsx";
 
 const DayView = () => {
   const navigate = useNavigate();
   const params = useParams();
 
   const dayId = useMemo(() => Number(params.day_id), [params.day_id]);
-  const itineraryId = useMemo(() => params.itinerary_id, [params.itinerary_id]);
 
-  const { data, isFetching } = usePosts(itineraryId);
+  const { loginData, logout } = useAuth();
+
+  const { user_id, passcode } = loginData;
+  const itinerary_id = user_id + "-" + passcode;
+
+  const { data, isFetching } = usePosts(itinerary_id);
 
   const days = useMemo(() => data?.brief || [], [data]);
 
@@ -51,12 +56,12 @@ const DayView = () => {
   );
 
   const handleOnBackToItinerary = useCallback(() => {
-    navigate(`/itinerary/${itineraryId}`);
-  }, [navigate, itineraryId]);
+    navigate(`/itinerary/${itinerary_id}`);
+  }, [navigate, itinerary_id]);
 
   const handleOnBackToLogin = useCallback(() => {
-    navigate(`/`);
-  }, [navigate]);
+    logout();
+  }, [logout]);
 
   if (isFetching) {
     return <div>Loading</div>;

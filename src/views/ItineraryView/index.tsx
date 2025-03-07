@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo } from "react";
 import DayThumbnailButton from "../../components/DayThumbnailButton/index.jsx";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import usePosts from "../../hooks/api/usePosts.tsx";
 import ItineraryLayout from "../../layouts/ItineraryLayout";
+import { useAuth } from "../../contexts/AuthProvider.tsx";
 
 const mapWithKey = (fn, array) => {
   let result = [];
@@ -14,7 +15,12 @@ const mapWithKey = (fn, array) => {
 
 const ItineraryView = (): React.JSX.Element => {
   const navigate = useNavigate();
-  const { itinerary_id } = useParams();
+
+  const { loginData, logout } = useAuth();
+
+  const { user_id, passcode } = loginData;
+
+  const itinerary_id = user_id + "-" + passcode;
 
   const { data, isFetching } = usePosts(itinerary_id);
   const days = useMemo(() => data?.brief || [], [data]);
@@ -27,8 +33,9 @@ const ItineraryView = (): React.JSX.Element => {
   );
 
   const handleOnBackToLogin = useCallback(() => {
-    navigate(`/`);
-  }, [navigate, itinerary_id]);
+    logout();
+  }, [logout]);
+
   if (isFetching) {
     return <div>Loading</div>;
   }

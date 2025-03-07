@@ -1,12 +1,21 @@
-
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import LoginView from "./views/LoginView";
 import ItineraryView from "./views/ItineraryView";
 import DayView from "./views/DayView";
 import HomeView from "./views/HomeView";
 import { ErrorBoundary } from "react-error-boundary";
+import { useEffect } from "react";
+import { useAuth } from "./contexts/AuthProvider.tsx";
 
 function App() {
+  const navigate = useNavigate();
+  const { isAuthorized } = useAuth();
+  useEffect(() => {
+    if (!isAuthorized) {
+      navigate("/");
+    }
+  }, [isAuthorized]);
+
   return (
     <Routes>
       <Route
