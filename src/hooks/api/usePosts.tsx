@@ -23,14 +23,14 @@ type Itinerary = {
   brief: Day[];
 };
 
-const usePosts = (user_id: string): UseQueryResult<Itinerary, Error> => {
+const useGetItinerary = (itinerary_id: string): UseQueryResult<Itinerary, Error> => {
   return useQuery({
-    queryKey: user_id ? ["posts", user_id] : ["posts"],
-    enabled: !!user_id,
+    queryKey: itinerary_id ? ["posts", itinerary_id] : ["posts"],
+    enabled: !!itinerary_id,
     queryFn: async () => {
       try {
         const response = await fetch(
-          `https://live.vamoos.com/v3/api/itineraries/${user_id}`,
+          `https://live.vamoos.com/v3/api/itineraries/${itinerary_id}`,
           { method: "GET" },
         );
         if (!response.ok) {
@@ -46,4 +46,4 @@ const usePosts = (user_id: string): UseQueryResult<Itinerary, Error> => {
   });
 };
 
-export default usePosts;
+export default useGetItinerary;

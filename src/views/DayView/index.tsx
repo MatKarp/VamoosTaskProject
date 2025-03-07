@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import usePosts from "../../hooks/api/usePosts.tsx";
+import useGetItinerary from "../../hooks/api/usePosts.tsx";
 import React, { useCallback, useMemo } from "react";
 import classNames from "classnames";
 import DayLayout from "../../layouts/DayLayout";
@@ -17,9 +17,12 @@ const DayView = () => {
   const { loginData, logout } = useAuth();
 
   const { user_id, passcode } = loginData;
-  const itinerary_id = user_id + "-" + passcode;
+  const itinerary_id = useMemo(
+    () => user_id && user_id + "-" + passcode,
+    [user_id, passcode],
+  );
 
-  const { data, isFetching } = usePosts(itinerary_id);
+  const { data, isFetching } = useGetItinerary(itinerary_id);
 
   const days = useMemo(() => data?.brief || [], [data]);
 

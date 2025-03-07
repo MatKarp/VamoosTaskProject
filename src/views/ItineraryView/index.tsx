@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo } from "react";
 import DayThumbnailButton from "../../components/DayThumbnailButton/index.jsx";
 import { useNavigate } from "react-router-dom";
-import usePosts from "../../hooks/api/usePosts.tsx";
 import ItineraryLayout from "../../layouts/ItineraryLayout";
 import { useAuth } from "../../contexts/AuthProvider.tsx";
+import useGetItinerary from "../../hooks/api/usePosts.tsx";
 
 const mapWithKey = (fn, array) => {
   let result = [];
@@ -20,9 +20,9 @@ const ItineraryView = (): React.JSX.Element => {
 
   const { user_id, passcode } = loginData;
 
-  const itinerary_id = user_id + "-" + passcode;
+  const itinerary_id = useMemo(() => user_id && user_id + "-" + passcode , [user_id, passcode]) ;
 
-  const { data, isFetching } = usePosts(itinerary_id);
+  const { data, isFetching } = useGetItinerary(itinerary_id);
 
   const days = useMemo(() => data?.brief || [], [data]);
 
