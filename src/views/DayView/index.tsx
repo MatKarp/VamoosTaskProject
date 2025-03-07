@@ -3,7 +3,6 @@ import usePosts from "../../hooks/api/usePosts.tsx";
 import React, { useCallback, useMemo } from "react";
 import classNames from "classnames";
 import DayLayout from "../../layouts/DayLayout";
-
 import "./style.scss";
 import { ErrorBoundary } from "react-error-boundary";
 import NavigationButton from "../../components/NavigationButton";
@@ -11,38 +10,54 @@ import NavigationButton from "../../components/NavigationButton";
 const DayView = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const day_id: number = Number(params.day_id);
-  const itinerary_id: string = params.itinerary_id;
-  const { data, isFetching } = usePosts(itinerary_id);
 
-  const days = data?.brief || [];
+  const dayId = useMemo(() => Number(params.day_id), [params.day_id]);
+  const itineraryId = useMemo(() => params.itinerary_id, [params.itinerary_id]);
 
-  const current_day_index = days.findIndex((dayObj) => dayObj.day === day_id);
-  const current_day = days[current_day_index];
+  const { data, isFetching } = usePosts(itineraryId);
 
-  const previousDay = days[current_day_index - 1]
-  const nextDay= days[current_day_index + 1]
+  const days = useMemo(() => data?.brief || [], [data]);
+
+  const currentDayIndex = useMemo(
+    () => days.findIndex((dayObj) => dayObj.day === dayId),
+    [days, dayId],
+  );
+
+  const currentDay = useMemo(
+    () => days[currentDayIndex],
+    [days, currentDayIndex],
+  );
+
+  const previousDay = useMemo(
+    () => days[currentDayIndex - 1],
+    [days, currentDayIndex],
+  );
+  const nextDay = useMemo(
+    () => days[currentDayIndex + 1],
+    [days, currentDayIndex],
+  );
 
   const textNodeContent = useMemo(
     () =>
-      current_day && (
+      currentDay && (
         <>
           <h1>
-            Day {current_day.day} {current_day.headline}
+            Day {currentDay.day} {currentDay.headline}
           </h1>
-          <div>{current_day.shortInformation}</div>
+          <div>{currentDay.shortInformation}</div>
         </>
       ),
-    [current_day],
+    [currentDay],
   );
 
   const handleOnBackToItinerary = useCallback(() => {
-    navigate(`/itinerary/` + itinerary_id);
-  }, [navigate, itinerary_id]);
+    navigate(`/itinerary/${itineraryId}`);
+  }, [navigate, itineraryId]);
 
   const handleOnBackToLogin = useCallback(() => {
     navigate(`/`);
-  }, [navigate, itinerary_id]);
+  }, [navigate]);
+
   if (isFetching) {
     return <div>Loading</div>;
   }
@@ -50,22 +65,27 @@ const DayView = () => {
   return (
     <DayLayout
       navBarNode={
-        <div className={"nav-bar-root"}>
+        <div className="nav-bar-root">
           <button onClick={handleOnBackToItinerary}>Back To Itinerary</button>
           <div
-            className={classNames(["flex-row", "align-items-center", "links"])}
+            className={classNames("flex-row", "align-items-center", "links")}
           >
-            {current_day?.detailsAttachment?.fileUrl && (
+            {currentDay?.detailsAttachment?.fileUrl && (
               <a
-                aria-selected={"false"}
+                aria-selected="false"
                 target="_blank"
-                href={current_day?.detailsAttachment?.fileUrl}
+                rel="noopener noreferrer"
+                href={currentDay.detailsAttachment.fileUrl}
               >
-                Details Atachment
+                Details Attachment
               </a>
             )}
-            {current_day?.location?.pdfUrl && (
-              <a target="_blank" href={current_day?.location?.pdfUrl}>
+            {currentDay?.location?.pdfUrl && (
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={currentDay.location.pdfUrl}
+              >
                 Location
               </a>
             )}
@@ -75,10 +95,10 @@ const DayView = () => {
       }
       previousButtonNode={
         previousDay && (
-          <ErrorBoundary fallback={"There was errors in this component"}>
+          <ErrorBoundary fallback={"There were errors in this component"}>
             <NavigationButton
               day={previousDay.day}
-              label={"PREVIOUS"}
+              label="PREVIOUS"
               headline={previousDay.headline}
             />
           </ErrorBoundary>
@@ -86,16 +106,18 @@ const DayView = () => {
       }
       nextButtonNode={
         nextDay && (
-          <ErrorBoundary fallback={"There was errors in this component"}>
+          <ErrorBoundary fallback={"There were errors in this component"}>
             <NavigationButton
               day={nextDay.day}
-              label={"NEXT"}
+              label="NEXT"
               headline={nextDay.headline}
             />
           </ErrorBoundary>
         )
       }
-      photoNode={<img src={current_day?.dailyPhoto} className={"image"} />}
+      photoNode={
+        <img src={currentDay?.dailyPhoto} className="image" alt="daily" />
+      }
       textNode={textNodeContent}
     />
   );
