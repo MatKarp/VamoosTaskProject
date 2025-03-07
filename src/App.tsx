@@ -1,5 +1,4 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-import LoginView from "./views/LoginView";
 import ItineraryView from "./views/ItineraryView";
 import DayView from "./views/DayView";
 import HomeView from "./views/HomeView";

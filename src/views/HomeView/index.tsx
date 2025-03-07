@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
-import {useAuth} from "../../contexts/AuthProvider.tsx";
+import { useAuth } from "../../contexts/AuthProvider.tsx";
 
 type FormValue = {
   user_id: string;
@@ -11,10 +11,7 @@ type FormValue = {
 };
 
 export const HomeView = (): React.ReactNode => {
-
-    const {login,logout, loginData, isAuthorized} = useAuth()
-
-    console.log()
+  const { login } = useAuth();
 
   const {
     register,
@@ -28,8 +25,8 @@ export const HomeView = (): React.ReactNode => {
   const handleOnSubmit = useCallback(
     (fields) => {
       const { user_id, passcode } = fields;
-     login({user_id, passcode})
-      if (login({user_id, passcode})) {
+      login({ user_id, passcode });
+      if (login({ user_id, passcode })) {
         navigate(`/itinerary/${user_id}-${passcode}`);
       } else {
         setShowAuthNotification(true);
